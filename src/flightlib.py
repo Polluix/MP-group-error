@@ -68,7 +68,12 @@ def atrito(h:int, m:int, ds:int) -> float:
 def gamma(v:float, h:int, W:float) -> float:
     return np.arctan(1/(CL(v,h,W)/CD(v,h,W)))*180/np.pi #[graus] Retorna o ângulo de planeio
 
-def bissecao(f:callable, a:float, b:float, h:int, wind:int, tol = 1e-4) -> float:
+def Thrust(v, *args, h=0):
+    a, b, c, d = args
+    
+    return (a*v**3 + b*v**2 + c*v + d)*dens(h)/dens(0)
+
+def bissecao(f:callable, *args:tuple, a:float, b:float, h:int, wind:int, tol = 1e-4) -> float:
   """
   Calcula a raiz de uma função utilizando o método da bissecção
   
@@ -85,8 +90,8 @@ def bissecao(f:callable, a:float, b:float, h:int, wind:int, tol = 1e-4) -> float
 
   n      = 0
   p      = (a+b)/2.0
-  imag_a = f(a, h, wind)
-  imag_p = f(p, h, wind)
+  imag_a = f(Thrust,a, *args, h=h, hw=0)
+  imag_p = f(Thrust,p, *args, h=h, hw=0)
   erro   = (b-a)/2.0
       
   while erro>tol:
@@ -99,6 +104,6 @@ def bissecao(f:callable, a:float, b:float, h:int, wind:int, tol = 1e-4) -> float
       n     += 1
       p      = (a+b)/2.0
       erro   = (b - a)/2.0
-      imag_p = f(p, h, wind)
+      imag_p = f(Thrust,p, *args, h=h, hw=0)
 
   return p

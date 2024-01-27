@@ -3,7 +3,7 @@ Biblioteca com as funções utilizadas nos scripts de voo
 @author: Luiz
 """
 import numpy as np
-from flightlib import *
+from src.flightlib import *
 
 # ---------------------------Constantes-----------------------------
 CD_to              = 0.0604 #coeficiente de arrasto na decolagem
@@ -52,7 +52,7 @@ def S_takeoff(h:int, mi:float, m:float) -> np.ndarray:
     X_array = np.array(X)
     return X_array, V_array  
 
-def Sg(trac:callable, h:int, mi:float, m:float, Hw:float) -> np.ndarray:
+def Sg(trac:callable, h:int, mi:float, m:float, Hw:float, *args:tuple) -> np.ndarray:
     X:list = []
     X.append(0)
     X0:float = 0
@@ -64,7 +64,7 @@ def Sg(trac:callable, h:int, mi:float, m:float, Hw:float) -> np.ndarray:
     W:float = m*9.81
     Vstall = V_stall(h, m)
     while V[i]<= Vstall*1.1: #ponto inicial da rotação
-        A = (g/W)*( (trac(V[i], h) - D_takeoff(V[i], h) - mi*( W - L_takeoff(V[i], h))))
+        A = (g/W)*( (trac(V[i], *args) - D_takeoff(V[i], h) - mi*( W - L_takeoff(V[i], h))))
         V.append(V0 + A*dT)
         X.append(X0 + V[i]*dT)
         V0:float = V[i+1]
@@ -73,5 +73,5 @@ def Sg(trac:callable, h:int, mi:float, m:float, Hw:float) -> np.ndarray:
     X_array = np.array(X)
     return X_array[-1]
 
-def MTOW_func(M:float, h:int = 1000, hw:float = 0):
-    return RC(1.1*V_stall(h, M),h,M*9.81) - np.sin(np.arctan(0.7/(55-Sg(Td,h,mi,M, hw))))*1.1*V_stall(h, M)
+def MTOW_func(Td:callable,M:float, *args:tuple, h:int = 1000, hw:float = 0):
+    return RC(1.1*V_stall(h, M),h,M*9.81) - np.sin(np.arctan(0.7/(55-Sg(Td, h, mi, m, 0, *args))))*1.1*V_stall(h, M)
