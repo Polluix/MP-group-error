@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "mp-group-error"
+version = "0.1.0"
+description = ""
+authors = ["Polluix <lipe311973@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+numpy = "^1.26.3"
+plotly = "^5.18.0"
+dash = "^2.14.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
